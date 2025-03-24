@@ -38,6 +38,8 @@ const GalleryItem = ({ artwork, index }: GalleryItemProps) => {
               className={`w-full h-64 object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               onLoad={() => setImageLoaded(true)}
               loading="lazy"
+              width={400}
+              height={264}
             />
           )}
         </div>
