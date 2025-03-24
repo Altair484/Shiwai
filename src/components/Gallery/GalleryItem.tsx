@@ -15,30 +15,31 @@ const GalleryItem = ({ artwork, index }: GalleryItemProps) => {
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
-    delay: 100 * index, // Délai progressif pour créer un effet de cascade
+    delay: 100 * Math.min(index, 5), // Cap the delay to prevent too much delay for later items
   });
 
-  // Format du prix en euros
+  // Format price in euros
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price / 100);
   };
 
   return (
     <div
-      key={artwork.id}
       ref={ref}
       className={`transition-all duration-500 ease-in-out ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
     >
       <Link to={`/aquarelles/${artwork.id}`} className="group block">
         <div className="overflow-hidden relative h-64">
           {!imageLoaded && <Skeleton className="w-full h-64 absolute top-0 left-0" />}
-          <img
-            src={artwork.image_url}
-            alt={artwork.title}
-            className={`w-full h-64 object-cover transition-transform duration-800 ease-in-out group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-            onLoad={() => setImageLoaded(true)}
-            loading="lazy"
-          />
+          {inView && (
+            <img
+              src={artwork.image_url}
+              alt={artwork.title}
+              className={`w-full h-64 object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              onLoad={() => setImageLoaded(true)}
+              loading="lazy"
+            />
+          )}
         </div>
         <div className="pt-3">
           <h3 className="font-cormorant text-lg font-medium">{artwork.title}</h3>

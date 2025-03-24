@@ -14,33 +14,43 @@ const CategoryFilter = ({ activeCategory, setActiveCategory }: CategoryFilterPro
     threshold: 0.1,
   });
 
+  const handleCategoryClick = (category: Category) => {
+    if (activeCategory !== category) {
+      setActiveCategory(category);
+    }
+  };
+
   return (
     <div
       ref={ref}
       className={`flex justify-center mb-12 ${inView ? 'fade-in' : ''}`}
     >
-      <div className="inline-flex border-b border-dark">
+      <div className="inline-flex border-b border-dark overflow-x-auto pb-1 max-w-full">
         <button
-          className={`px-4 py-2 font-inter uppercase text-sm ${activeCategory === 'all' ? 'border-b-2 border-dark' : ''}`}
-          onClick={() => setActiveCategory('all')}
+          className={`px-4 py-2 font-inter uppercase text-sm whitespace-nowrap ${activeCategory === 'all' ? 'border-b-2 border-dark' : ''}`}
+          onClick={() => handleCategoryClick('all')}
+          type="button"
         >
           Toutes
         </button>
         <button
-          className={`px-4 py-2 font-inter uppercase text-sm ${activeCategory === 'portrait' ? 'border-b-2 border-dark' : ''}`}
-          onClick={() => setActiveCategory('portrait')}
+          className={`px-4 py-2 font-inter uppercase text-sm whitespace-nowrap ${activeCategory === 'portrait' ? 'border-b-2 border-dark' : ''}`}
+          onClick={() => handleCategoryClick('portrait')}
+          type="button"
         >
           Portraits
         </button>
         <button
-          className={`px-4 py-2 font-inter uppercase text-sm ${activeCategory === 'nature-morte' ? 'border-b-2 border-dark' : ''}`}
-          onClick={() => setActiveCategory('nature-morte')}
+          className={`px-4 py-2 font-inter uppercase text-sm whitespace-nowrap ${activeCategory === 'nature-morte' ? 'border-b-2 border-dark' : ''}`}
+          onClick={() => handleCategoryClick('nature-morte')}
+          type="button"
         >
           Nature Morte
         </button>
         <button
-          className={`px-4 py-2 font-inter uppercase text-sm ${activeCategory === 'paysage' ? 'border-b-2 border-dark' : ''}`}
-          onClick={() => setActiveCategory('paysage')}
+          className={`px-4 py-2 font-inter uppercase text-sm whitespace-nowrap ${activeCategory === 'paysage' ? 'border-b-2 border-dark' : ''}`}
+          onClick={() => handleCategoryClick('paysage')}
+          type="button"
         >
           Paysages
         </button>

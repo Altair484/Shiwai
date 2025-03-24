@@ -16,7 +16,7 @@ import './index.css';
 function App() {
   return (
     <Router>
-      <div className="bg-cream min-h-screen font-inter text-dark" data-scroll-container>
+      <div className="bg-cream min-h-screen font-inter text-dark">
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />

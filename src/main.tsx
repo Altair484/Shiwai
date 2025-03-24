@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import './index.css';
 
-// Récupère l'élément racine et crée le root React
+// Get the root element and create React root
 const rootElement = document.getElementById('root');
 
 if (!rootElement) {
@@ -13,7 +13,7 @@ if (!rootElement) {
 
 const root = createRoot(rootElement);
 
-// Rend l'application
+// Render the application
 root.render(
   <StrictMode>
     <App />
