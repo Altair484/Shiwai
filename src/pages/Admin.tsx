@@ -1,12 +1,45 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useArtworks } from '@/hooks/use-artworks';
-import { Loader, Edit, Trash2, Plus } from 'lucide-react';
+import { Loader, Edit, Trash2, Plus, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import AdminSetup from '@/components/AdminSetup';
 
 const Admin = () => {
   const { artworks, loading, error } = useArtworks('all');
+  const { signOut } = useAuth();
+  const { toast } = useToast();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [adminExists, setAdminExists] = useState<boolean | null>(null);
+  const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
+
+  // Vérifier si un admin existe déjà
+  useEffect(() => {
+    const checkAdminExists = async () => {
+      try {
+        const { count, error } = await supabase
+          .from('admins')
+          .select('*', { count: 'exact', head: true });
+        
+        if (error) {
+          console.error('Erreur lors de la vérification des administrateurs:', error);
+          return;
+        }
+        
+        setAdminExists(count !== null && count > 0);
+      } catch (error) {
+        console.error('Erreur inattendue:', error);
+      } finally {
+        setIsCheckingAdmin(false);
+      }
+    };
+    
+    checkAdminExists();
+  }, []);
 
   // Format du prix en euros
   const formatPrice = (price: number) => {
@@ -14,18 +47,59 @@ const Admin = () => {
       .format(price / 100);
   };
 
-  // Note: Cette page est juste une ébauche pour montrer la structure
-  // Nous implémenterons l'authentification et les fonctionnalités complètes plus tard
+  const handleSignOut = async () => {
+    setIsLoggingOut(true);
+    try {
+      await signOut();
+      toast({
+        title: "Déconnexion réussie",
+        description: "Vous avez été déconnecté avec succès",
+      });
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  // Afficher un loader pendant la vérification
+  if (isCheckingAdmin) {
+    return (
+      <main className="py-12">
+        <div className="mx-auto max-w-6xl px-4 flex justify-center py-12">
+          <Loader className="animate-spin" size={32} />
+        </div>
+      </main>
+    );
+  }
+
+  // Afficher le formulaire de configuration si aucun admin n'existe
+  if (adminExists === false) {
+    return (
+      <main className="py-12">
+        <div className="mx-auto max-w-2xl px-4">
+          <h1 className="font-cormorant text-3xl mb-6">Configuration de l'administration</h1>
+          <AdminSetup />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="py-12">
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex justify-between items-center mb-8">
           <h1 className="font-cormorant text-3xl">Administration des œuvres</h1>
-          <Button>
-            <Plus size={16} className="mr-2" />
-            Ajouter une œuvre
-          </Button>
+          <div className="flex gap-3">
+            <Button>
+              <Plus size={16} className="mr-2" />
+              Ajouter une œuvre
+            </Button>
+            <Button variant="outline" onClick={handleSignOut} disabled={isLoggingOut}>
+              <LogOut size={16} className="mr-2" />
+              Déconnexion
+            </Button>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -107,14 +181,6 @@ const Admin = () => {
               </table>
             </div>
           )}
-        </div>
-
-        <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-md p-4">
-          <h2 className="text-yellow-800 font-medium text-lg">Note importante</h2>
-          <p className="text-yellow-700 mt-1">
-            Cette interface d'administration n'est pas encore connectée à un système d'authentification. 
-            L'authentification sera implémentée dans une prochaine étape pour sécuriser cette interface.
-          </p>
         </div>
       </div>
     </main>
