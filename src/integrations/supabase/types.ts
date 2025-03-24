@@ -9,7 +9,101 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      artworks: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string
+          dimensions: string
+          featured: boolean | null
+          id: string
+          image_url: string
+          price: number
+          sold: boolean | null
+          technique: string
+          title: string
+          updated_at: string | null
+          year: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description: string
+          dimensions: string
+          featured?: boolean | null
+          id?: string
+          image_url: string
+          price: number
+          sold?: boolean | null
+          technique: string
+          title: string
+          updated_at?: string | null
+          year: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string
+          dimensions?: string
+          featured?: boolean | null
+          id?: string
+          image_url?: string
+          price?: number
+          sold?: boolean | null
+          technique?: string
+          title?: string
+          updated_at?: string | null
+          year?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          artwork_id: string | null
+          created_at: string | null
+          customer_address: string
+          customer_email: string
+          customer_name: string
+          id: string
+          status: string | null
+          stripe_payment_id: string | null
+          total_amount: number
+          updated_at: string | null
+        }
+        Insert: {
+          artwork_id?: string | null
+          created_at?: string | null
+          customer_address: string
+          customer_email: string
+          customer_name: string
+          id?: string
+          status?: string | null
+          stripe_payment_id?: string | null
+          total_amount: number
+          updated_at?: string | null
+        }
+        Update: {
+          artwork_id?: string | null
+          created_at?: string | null
+          customer_address?: string
+          customer_email?: string
+          customer_name?: string
+          id?: string
+          status?: string | null
+          stripe_payment_id?: string | null
+          total_amount?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artworks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
