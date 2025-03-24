@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, Suspense, useCallback } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
 import { useArtworks } from '@/hooks/use-artworks';
@@ -7,6 +7,23 @@ import { Category } from '@/types/artwork';
 import { Loader } from 'lucide-react';
 import GalleryItem from '@/components/Gallery/GalleryItem';
 import CategoryFilter from '@/components/Gallery/CategoryFilter';
+import { Skeleton } from '@/components/ui/skeleton';
+
+// Composant de skeleton pour les artworks en chargement
+const GallerySkeleton = () => {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {Array(6).fill(0).map((_, index) => (
+        <div key={index} className="space-y-3">
+          <Skeleton className="w-full h-64" />
+          <Skeleton className="w-2/3 h-5" />
+          <Skeleton className="w-1/2 h-4" />
+          <Skeleton className="w-1/4 h-4" />
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const Gallery = () => {
     const [activeCategory, setActiveCategory] = useState<Category>('all');
@@ -16,6 +33,10 @@ const Gallery = () => {
         triggerOnce: true,
         threshold: 0.1,
     });
+
+    const handleCategoryChange = useCallback((category: Category) => {
+      setActiveCategory(category);
+    }, []);
 
     return (
         <main className="pt-12 pb-16">
@@ -32,14 +53,12 @@ const Gallery = () => {
                 {/* Filtres par catégorie */}
                 <CategoryFilter 
                     activeCategory={activeCategory} 
-                    setActiveCategory={setActiveCategory} 
+                    setActiveCategory={handleCategoryChange}
                 />
 
                 {/* État de chargement */}
                 {loading ? (
-                    <div className="flex justify-center py-12">
-                        <Loader className="animate-spin" size={32} />
-                    </div>
+                    <GallerySkeleton />
                 ) : error ? (
                     <div className="text-center py-12">
                         <p className="font-inter text-red-500">{error}</p>

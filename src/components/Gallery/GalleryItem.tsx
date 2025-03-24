@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import { Artwork } from '@/types/artwork';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface GalleryItemProps {
   artwork: Artwork;
@@ -10,6 +11,7 @@ interface GalleryItemProps {
 }
 
 const GalleryItem = ({ artwork, index }: GalleryItemProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -28,11 +30,14 @@ const GalleryItem = ({ artwork, index }: GalleryItemProps) => {
       className={`transition-all duration-500 ease-in-out ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
     >
       <Link to={`/aquarelles/${artwork.id}`} className="group block">
-        <div className="overflow-hidden">
+        <div className="overflow-hidden relative h-64">
+          {!imageLoaded && <Skeleton className="w-full h-64 absolute top-0 left-0" />}
           <img
             src={artwork.image_url}
             alt={artwork.title}
-            className="w-full h-64 object-cover transition-transform duration-800 ease-in-out group-hover:scale-105"
+            className={`w-full h-64 object-cover transition-transform duration-800 ease-in-out group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoad={() => setImageLoaded(true)}
+            loading="lazy"
           />
         </div>
         <div className="pt-3">
