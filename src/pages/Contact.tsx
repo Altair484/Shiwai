@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useInView } from 'react-intersection-observer';
 
+interface FormData {
+    name: string;
+    email: string;
+    subject: string;
+    message: string;
+}
+
 const Contact = () => {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         name: '',
         email: '',
         subject: '',
         message: ''
     });
 
-    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
 
     const { ref: titleRef, inView: titleInView } = useInView({
         triggerOnce: true,
@@ -26,7 +34,7 @@ const Contact = () => {
         threshold: 0.1,
     });
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState,
@@ -34,7 +42,7 @@ const Contact = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // Ici, vous mettriez la logique d'envoi du formulaire à votre backend
         console.log('Formulaire soumis:', formData);
@@ -123,7 +131,7 @@ const Contact = () => {
                                     value={formData.message}
                                     onChange={handleChange}
                                     required
-                                    rows="6"
+                                    rows={6}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-dark"
                                 ></textarea>
                             </div>

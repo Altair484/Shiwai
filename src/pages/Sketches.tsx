@@ -1,8 +1,17 @@
+
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
 
 // Données simulées des croquis (à remplacer par vos données réelles)
-const sketchesData = [
+interface Sketch {
+    id: number;
+    title: string;
+    year: string;
+    technique: string;
+    image: string;
+}
+
+const sketchesData: Sketch[] = [
     {
         id: 1,
         title: "Étude de visage",
@@ -69,6 +78,9 @@ const Sketches = () => {
                     <h1 className="font-cormorant-sc responsive-h1 text-center mb-6">SHIWAI</h1>
                     <h2 className="font-inter uppercase text-center responsive-subtitle">CROQUIS</h2>
                 </div>
+                
+                {/* Ici, vous pourriez ajouter un composant pour afficher les croquis */}
+                {/* Par exemple, une grille similaire à celle de la galerie */}
             </div>
         </main>
     );
