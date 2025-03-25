@@ -46,7 +46,7 @@ const Gallery = () => {
                     className={`mb-12 ${titleInView ? 'fade-in' : ''}`}
                 >
                     <h1 className="font-cormorant-sc responsive-h1 text-center mb-6">SHIWAI</h1>
-                    <h2 className="font-inter uppercase text-center responsive-subtitle">GALLERIE</h2>
+                    <h2 className="font-inter uppercase text-center responsive-subtitle">GALERIE</h2>
                 </div>
 
                 {/* Category filters */}
